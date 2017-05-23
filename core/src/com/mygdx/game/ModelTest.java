@@ -68,7 +68,7 @@ public class ModelTest implements ApplicationListener {
 	private Texture BackGround;
 	private SpriteBatch batch;
 	private Music crankThat;
-    private Music watchMe;
+    private Music ymca;
     private Music gangnamStyle;
     private Music oneDance;
     private Music macarena;
@@ -106,7 +106,7 @@ public class ModelTest implements ApplicationListener {
 		camera.lookAt(0f,0f,0f);
 		//crankThat = Gdx.audio.newSound(Gdx.files.internal("data/crankThat.mp3"));
 		crankThat = Gdx.audio.newMusic(Gdx.files.internal("data/crankThatFinal.mp3"));
-        watchMe = Gdx.audio.newMusic(Gdx.files.internal("data/watchMe.mp3"));
+        ymca = Gdx.audio.newMusic(Gdx.files.internal("data/ymca.mp3"));
         oneDance = Gdx.audio.newMusic(Gdx.files.internal("data/oneDance.mp3"));
         gangnamStyle = Gdx.audio.newMusic(Gdx.files.internal("data/gangnamStyle.mp3"));
         macarena = Gdx.audio.newMusic(Gdx.files.internal("data/macarena.mp3"));
@@ -127,7 +127,7 @@ public class ModelTest implements ApplicationListener {
 		// Now load the model by name
 		// Note, the model (g3db file ) and textures need to be added to the assets folder of the Android proj
 		model = modelLoader.loadModel(Gdx.files.getFileHandle("data/DrBones.g3db", FileType.Internal));
-        model2 = modelLoader.loadModel(Gdx.files.getFileHandle("data/Humanblend.g3db", FileType.Internal));
+        model2 = modelLoader.loadModel(Gdx.files.getFileHandle("data/m2pasito3.g3db", FileType.Internal));
         audience = modelLoader.loadModel(Gdx.files.getFileHandle("data/Audience.g3db", FileType.Internal));
         horse = modelLoader.loadModel(Gdx.files.getFileHandle("data/Horse.g3db", FileType.Internal));
         blueBall = modelLoader.loadModel(Gdx.files.getFileHandle("data/BlueBall.g3db", FileType.Internal));
@@ -149,7 +149,8 @@ public class ModelTest implements ApplicationListener {
 		//move the model down a bit on the screen ( in a z-up world, down is -z ).
 
         model2Instance.transform.translate(0, -10, 0);
-        model2Instance.transform.translate(0, 0, 4);
+        model2Instance.transform.translate(0, -3, -4);
+        model2Instance.transform.scale(0.03f,0.03f,0.03f);
 
         audienceInstance.transform.translate(0,-12,0);
         audienceInstance.transform.translate(0,0,-5);
@@ -186,6 +187,27 @@ public class ModelTest implements ApplicationListener {
 
 		// You use an AnimationController to um, control animations.  Each control is tied to the model instance
 		controller = new AnimationController(modelInstance);
+        controller.setAnimation("dance2", -1, new AnimationListener() {
+
+            @Override
+            public void onEnd(AnimationDesc animation) {
+                // this will be called when the current animation is done.
+                // queue up another animation called "balloon".
+                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
+                //controller.queue("ymca",-1,1f,null,0f);
+            }
+
+            @Override
+            public void onLoop(AnimationDesc animation) {
+
+                // TODO Auto-generated method stub
+            }
+
+        });
+
+        crankThat.play();
+        crankThat.setLooping(true);
+
         controller2 = new AnimationController(model2Instance);
         prop = new AnimationController(audienceInstance);
         prop2 = new AnimationController(horseInstance);
@@ -196,7 +218,7 @@ public class ModelTest implements ApplicationListener {
                 // this will be called when the current animation is done.
                 // queue up another animation called "balloon".
                 // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                //controller.queue("watchMe",-1,1f,null,0f);
+                //controller.queue("ymca",-1,1f,null,0f);
             }
 
             @Override
@@ -214,7 +236,7 @@ public class ModelTest implements ApplicationListener {
                 // this will be called when the current animation is done.
                 // queue up another animation called "balloon".
                 // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                //controller.queue("watchMe",-1,1f,null,0f);
+                //controller.queue("ymca",-1,1f,null,0f);
             }
 
             @Override
@@ -230,84 +252,10 @@ public class ModelTest implements ApplicationListener {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-        button2 = new TextButton("Play",skin,"small");
-        button2.setSize(200, 80);
-        button2.setPosition(50, Gdx.graphics.getHeight()-80);
-        button2.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                //outputLabel.setText("Press a Button");
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button)
-            {
-                if(MtoRender == 0)
-                {
-                    //outputLabel.setText("Pressed Text Button");
-                    if(currentSong == 0) {
-                        watchMe.stop();
-                        macarena.stop();
-                        oneDance.stop();
-                        gangnamStyle.stop();
-                        crankThat.play();
-                        controller.setAnimation("dance2", -1, new AnimationListener() {
-
-                            @Override
-                            public void onEnd(AnimationDesc animation) {
-                                // this will be called when the current animation is done.
-                                // queue up another animation called "balloon".
-                                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
-                            }
-
-                            @Override
-                            public void onLoop(AnimationDesc animation) {
-
-                                // TODO Auto-generated method stub
-                                crankThat.play();
-                            }
-
-                        });
-                    }
-                }
-                else if(MtoRender == 1)
-                {
-                    if(currentSong == 2)
-                    {
-                        watchMe.stop();
-                        macarena.stop();
-                        oneDance.play();
-                        gangnamStyle.stop();
-                        crankThat.stop();
-                        controller2.setAnimation("Maniac", -1, new AnimationListener() {
-                            //play one dance
-                            @Override
-                            public void onEnd(AnimationDesc animation) {
-                                // this will be called when the current animation is done.
-                                // queue up another animation called "balloon".
-                                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
-                            }
-
-                            @Override
-                            public void onLoop(AnimationDesc animation) {
-
-                                // TODO Auto-generated method stub
-                                //crankThat.play();
-                                oneDance.play();
-                                //play one dance
-                            }
-
-                        });
-                    }
-                }
-
-                return true;
-            }
-        });//plays crank that and dances
+        //plays crank that and dances
         button3 = new TextButton("Next Song",skin,"small");
-        button3.setSize(200, 80);
-        button3.setPosition(300, Gdx.graphics.getHeight()-80);
+        button3.setSize(300, 160);
+        button3.setPosition(200, Gdx.graphics.getHeight()-160);
         button3.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -316,14 +264,17 @@ public class ModelTest implements ApplicationListener {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 //outputLabel.setText("Pressed Text Button");
+                ymca.stop();
+                macarena.stop();
+                oneDance.stop();
+                gangnamStyle.stop();
+                crankThat.stop();
+
                 if(MtoRender == 0)
                 {
                     if(currentSong == 0) {
-                        watchMe.play();
-                        macarena.stop();
-                        oneDance.stop();
-                        gangnamStyle.stop();
-                        crankThat.stop();
+                        crankThat.play();
+                        crankThat.setLooping(true);
                         controller.setAnimation("dance2", -1, new AnimationListener() {
 
                             @Override
@@ -331,175 +282,160 @@ public class ModelTest implements ApplicationListener {
                                 // this will be called when the current animation is done.
                                 // queue up another animation called "balloon".
                                 // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
+                                //controller.queue("ymca",-1,1f,null,0f);
                             }
 
                             @Override
                             public void onLoop(AnimationDesc animation) {
 
                                 // TODO Auto-generated method stub
-                                //crankThat.play();
-                                watchMe.play();
-                            }
-
-                        });
-                        currentSong = currentSong +1;
-                    }
-                    else if(currentSong == 1)
-                    {
-                        watchMe.stop();
-                        macarena.stop();
-                        oneDance.stop();
-                        gangnamStyle.stop();
-                        crankThat.play();
-                        controller.setAnimation("Bones_for_Bones|Dance3",-1, new AnimationListener(){
-
-                            @Override
-                            public void onEnd(AnimationDesc animation) {
-                                // this will be called when the current animation is done.
-                                // queue up another animation called "balloon".
-                                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
-                            }
-
-                            @Override
-                            public void onLoop(AnimationDesc animation) {
-
-                                // TODO Auto-generated method stub
-                                crankThat.play();
                             }
 
                         });
                         currentSong = currentSong + 1;
                     }
-                    else if(currentSong == 2)
-                    {
-                        watchMe.stop();
-                        macarena.stop();
-                        oneDance.play();
-                        gangnamStyle.stop();
-                        crankThat.stop();
-                        controller.setAnimation("Bones_for_Bones|YACM",-1, new AnimationListener(){
+                    else
+                        if(currentSong == 1)
+                        {
+                            oneDance.play();
+                            oneDance.setLooping(true);
+                            controller.setAnimation("Bones_for_Bones|Dance3",-1, new AnimationListener(){
 
-                            @Override
-                            public void onEnd(AnimationDesc animation) {
-                                // this will be called when the current animation is done.
-                                // queue up another animation called "balloon".
-                                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
+                                @Override
+                                public void onEnd(AnimationDesc animation) {
+                                    // this will be called when the current animation is done.
+                                    // queue up another animation called "balloon".
+                                    // Passing a negative to loop count loops forever.  1f for speed is normal speed.
+                                    //controller.queue("ymca",-1,1f,null,0f);
+                                }
+
+                                @Override
+                                public void onLoop(AnimationDesc animation) {
+
+                                    // TODO Auto-generated method stub
+                                    //oneDance.play();
+                                }
+
+                            });
+                            currentSong = currentSong + 1;
+                        }
+                        else
+                            if(currentSong == 2)
+                            {
+                                ymca.play();
+                                ymca.setLooping(true);
+                                controller.setAnimation("Bones_for_Bones|YACM",-1, new AnimationListener(){
+
+                                    @Override
+                                    public void onEnd(AnimationDesc animation) {
+                                        // this will be called when the current animation is done.
+                                        // queue up another animation called "balloon".
+                                        // Passing a negative to loop count loops forever.  1f for speed is normal speed.
+                                        //controller.queue("ymca",-1,1f,null,0f);
+                                    }
+
+                                    @Override
+                                    public void onLoop(AnimationDesc animation) {
+
+                                        // TODO Auto-generated method stub
+                                        //ymca.play();
+                                    }
+
+                                });
+                                currentSong = 0;
                             }
-
-                            @Override
-                            public void onLoop(AnimationDesc animation) {
-
-                                // TODO Auto-generated method stub
-                                oneDance.play();
-                            }
-
-                        });
-                        currentSong = 0;
-                    }
                 }
                 else if (MtoRender == 1)
                 {
-                    if(currentSong == 2)
+                    if(currentSong == 0)
                     {
-                        watchMe.stop();
-                        macarena.stop();
                         oneDance.play();
-                        gangnamStyle.stop();
-                        crankThat.stop();
-                        controller2.setAnimation("Maniac", -1, new AnimationListener() {
+                        oneDance.setLooping(true);
+                        controller2.setAnimation("Armature|paso1", -1, new AnimationListener() {
                             //play one dance
                             @Override
                             public void onEnd(AnimationDesc animation) {
                                 // this will be called when the current animation is done.
                                 // queue up another animation called "balloon".
                                 // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
+                                //controller.queue("ymca",-1,1f,null,0f);
                             }
 
                             @Override
                             public void onLoop(AnimationDesc animation) {
 
                                 // TODO Auto-generated method stub
-                                //crankThat.play();
-                                oneDance.play();
+                                //oneDance.play();
                                 //play one dance
                             }
 
                         });
                         currentSong = currentSong +1;
                     }
-                    else if(currentSong == 3)
-                    {
-                        watchMe.stop();
-                        macarena.play();
-                        oneDance.stop();
-                        gangnamStyle.stop();
-                        crankThat.stop();
-                        controller2.setAnimation("70s", -1, new AnimationListener() {
-                            //play macarena
-
-                            @Override
-                            public void onEnd(AnimationDesc animation) {
-                                // this will be called when the current animation is done.
-                                // queue up another animation called "balloon".
-                                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
-                            }
-
-                            @Override
-                            public void onLoop(AnimationDesc animation) {
-
-                                // TODO Auto-generated method stub
-                                //crankThat.play();
+                    else
+                        if(currentSong == 1)
+                        {
+                            macarena.play();
+                            macarena.setLooping(true);
+                            controller2.setAnimation("Armature|pasito2", -1, new AnimationListener() {
                                 //play macarena
-                                macarena.play();
-                            }
 
-                        });
-                        currentSong = currentSong +1;
-                    }
-                    else if(currentSong == 4)
-                    {
-                        watchMe.stop();
-                        macarena.stop();
-                        oneDance.stop();
-                        gangnamStyle.play();
-                        crankThat.stop();
-                        controller2.setAnimation("gangnam", -1, new AnimationListener() {
-                            //play gangnam style
+                                @Override
+                                public void onEnd(AnimationDesc animation) {
+                                    // this will be called when the current animation is done.
+                                    // queue up another animation called "balloon".
+                                    // Passing a negative to loop count loops forever.  1f for speed is normal speed.
+                                    //controller.queue("ymca",-1,1f,null,0f);
+                                }
 
-                            @Override
-                            public void onEnd(AnimationDesc animation) {
-                                // this will be called when the current animation is done.
-                                // queue up another animation called "balloon".
-                                // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                                //controller.queue("watchMe",-1,1f,null,0f);
-                            }
+                                @Override
+                                public void onLoop(AnimationDesc animation) {
 
-                            @Override
-                            public void onLoop(AnimationDesc animation) {
+                                    // TODO Auto-generated method stub
+                                    //crankThat.play();
+                                    //play macarena
+                                    //macarena.play();
+                                }
 
-                                // TODO Auto-generated method stub
-                                //crankThat.play();
-                                //play gangnam style
+                            });
+                            currentSong = currentSong +1;
+                        }
+                        else
+                            if(currentSong == 2)
+                            {
                                 gangnamStyle.play();
+                                gangnamStyle.setLooping(true);
+                                controller2.setAnimation("Armature|pasito3", -1, new AnimationListener() {
+                                    //play gangnam style
+
+                                    @Override
+                                    public void onEnd(AnimationDesc animation) {
+                                        // this will be called when the current animation is done.
+                                        // queue up another animation called "balloon".
+                                        // Passing a negative to loop count loops forever.  1f for speed is normal speed.
+                                        //controller.queue("ymca",-1,1f,null,0f);
+                                    }
+
+                                    @Override
+                                    public void onLoop(AnimationDesc animation) {
+
+                                        // TODO Auto-generated method stub
+                                        //crankThat.play();
+                                        //play gangnam style
+                                        //gangnamStyle.play();
+                                    }
+
+                                });
+                                currentSong = 0;
                             }
-
-                        });
-                        currentSong = 2;
-                    }
-
                 }
 
                 return true;
             }
         });// plays Silento, or any in the 5 song playlist
-        button4 = new TextButton("Change Background",skin,"small");
-        button4.setSize(200, 80);
-        button4.setPosition(550, Gdx.graphics.getHeight()-80);
+        button4 = new TextButton("Change Background", skin,"small");
+        button4.setSize(300, 160);
+        button4.setPosition(700, Gdx.graphics.getHeight()-160);
         button4.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -522,7 +458,7 @@ public class ModelTest implements ApplicationListener {
                             // this will be called when the current animation is done.
                             // queue up another animation called "balloon".
                             // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                            //controller.queue("watchMe",-1,1f,null,0f);
+                            //controller.queue("ymca",-1,1f,null,0f);
                         }
 
                         @Override
@@ -540,7 +476,7 @@ public class ModelTest implements ApplicationListener {
                             // this will be called when the current animation is done.
                             // queue up another animation called "balloon".
                             // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                            //controller.queue("watchMe",-1,1f,null,0f);
+                            //controller.queue("ymca",-1,1f,null,0f);
                         }
 
                         @Override
@@ -568,7 +504,7 @@ public class ModelTest implements ApplicationListener {
                             // this will be called when the current animation is done.
                             // queue up another animation called "balloon".
                             // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                            //controller.queue("watchMe",-1,1f,null,0f);
+                            //controller.queue("ymca",-1,1f,null,0f);
                         }
 
                         @Override
@@ -586,7 +522,7 @@ public class ModelTest implements ApplicationListener {
                             // this will be called when the current animation is done.
                             // queue up another animation called "balloon".
                             // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                            //controller.queue("watchMe",-1,1f,null,0f);
+                            //controller.queue("ymca",-1,1f,null,0f);
                         }
 
                         @Override
@@ -602,8 +538,8 @@ public class ModelTest implements ApplicationListener {
             }
         });// plays Silento, or any in the 5 song playlist
         button5 = new TextButton("Change Dancer",skin,"small");
-        button5.setSize(200, 80);
-        button5.setPosition(800, Gdx.graphics.getHeight()-80);
+        button5.setSize(300, 160);
+        button5.setPosition(1200, Gdx.graphics.getHeight()-160);
         button5.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -611,46 +547,44 @@ public class ModelTest implements ApplicationListener {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                //Song = 0;
+                ymca.stop();
+                macarena.stop();
+                oneDance.stop();
+                gangnamStyle.stop();
+                crankThat.stop();
+
                 if(MtoRender == 0)
                 {
                     MtoRender = 1;
-                    currentSong = 2;
-                    watchMe.stop();
-                    macarena.stop();
+                    currentSong = 0;
                     oneDance.play();
-                    gangnamStyle.stop();
-                    crankThat.stop();
-                    controller2.setAnimation("Maniac", -1, new AnimationListener() {
+                    oneDance.setLooping(true);
+                    controller2.setAnimation("Armature|paso1", -1, new AnimationListener() {
                         //play one dance
                         @Override
                         public void onEnd(AnimationDesc animation) {
                             // this will be called when the current animation is done.
                             // queue up another animation called "balloon".
                             // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                            //controller.queue("watchMe",-1,1f,null,0f);
+                            //controller.queue("ymca",-1,1f,null,0f);
                         }
 
                         @Override
                         public void onLoop(AnimationDesc animation) {
 
                             // TODO Auto-generated method stub
-                            //crankThat.play();
-                            oneDance.play();
+                            //oneDance.play();
                             //play one dance
                         }
 
                     });
                 }
-                else if(MtoRender == 1)
+                else
                 {
                     MtoRender = 0;
                     currentSong = 0;
-                    watchMe.stop();
-                    macarena.stop();
-                    oneDance.stop();
-                    gangnamStyle.stop();
                     crankThat.play();
+                    crankThat.setLooping(true );
                     controller.setAnimation("dance2", -1, new AnimationListener() {
 
                         @Override
@@ -658,14 +592,14 @@ public class ModelTest implements ApplicationListener {
                             // this will be called when the current animation is done.
                             // queue up another animation called "balloon".
                             // Passing a negative to loop count loops forever.  1f for speed is normal speed.
-                            //controller.queue("watchMe",-1,1f,null,0f);
+                            //controller.queue("ymca",-1,1f,null,0f);
                         }
 
                         @Override
                         public void onLoop(AnimationDesc animation) {
 
                             // TODO Auto-generated method stub
-                            crankThat.play();
+                            //crankThat.play();
                         }
 
                     });
@@ -673,31 +607,10 @@ public class ModelTest implements ApplicationListener {
                 //stop all songs
                 return true;
             }
-        });// plays Silento, or any in the 5 song playlist
-        stage.addActor(button2);
+        });
         stage.addActor(button3);
         stage.addActor(button4);
         stage.addActor(button5);
-		//crankThat.play();
-		/*
-
-		Gdx.input.setInputProcessor(stage);
-
-		myTexture = new Texture(Gdx.files.internal("data/pButton.jpg"));
-		myTextureRegion = new TextureRegion(myTexture);
-		myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
-		button = new ImageButton(myTexRegionDrawable); //Set the button up
-		stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
-		stage.addActor(button);
-		button.addListener(new EventListener() {
-			@Override
-			public boolean handle (Event event) {
-				System.out.println("Button Pressed");
-
-				return true;
-			}
-		});
-		*/
 	}
 
 	@Override
@@ -724,22 +637,14 @@ public class ModelTest implements ApplicationListener {
         controller2.update(Gdx.graphics.getDeltaTime());
         prop.update(Gdx.graphics.getDeltaTime());
         prop2.update(Gdx.graphics.getDeltaTime());
-		// Like spriteBatch, just with models!  pass in the box Instance and the environment
-
-		//batch.begin();
-
-		//batch.draw(BackGround, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		//button.draw(batch, 0f);
-
-        //batch.draw(BackGround, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().begin();
         stage.getBatch().draw(BackGround, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
         stage.act();
         stage.draw();
-        //crankThat.dispose();
+
         modelBatch.begin(camera);
-        //batch.end();
+
         if(MtoRender == 0)
         {
             modelBatch.render(modelInstance, environment);
@@ -757,7 +662,6 @@ public class ModelTest implements ApplicationListener {
             modelBatch.render(audienceInstance, environment);
         }
 		modelBatch.end();
-        //stage.getBatch().end();
 	}
 
 	@Override
